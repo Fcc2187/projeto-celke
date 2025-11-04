@@ -1,16 +1,13 @@
 import express, {type Request,type Response} from "express";
-import { AppDataSource } from "./data-source.js";
+import UsersController from "./controllers/UsersController.js";
 
 const app = express();
 
-AppDataSource.initialize().then(() => {
-  console.log("Data Source has been initialized!");
-}).catch((err) => {
-  console.error("Error during Data Source initialization:", err);
-});
+app.use(express.json());
+
+app.use("/", UsersController);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, Manos!");
 });
 
 app.listen(8080, () => {

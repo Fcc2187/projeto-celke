@@ -16,6 +16,9 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "rootDir": "./src",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+
   }
 }
