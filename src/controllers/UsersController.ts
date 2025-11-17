@@ -55,6 +55,46 @@ router.post('/users', async (req: Request, res: Response) => {
    }
 });
 
+router.put('/users/:id', async (req: Request, res: Response) => {
+   try {
+      const { id } = req.params;
+      if (!id) {
+         return res.status(400).json({ message: 'Invalid user id' });
+      }
+      const data = req.body;
+      const userRepository = AppDataSource.getRepository(User);
+      const user = await userRepository.findOneBy({ id: parseInt(id, 10) });
+      if (!user) {
+         return res.status(404).json({ message: 'User not found' });
+      }
+      userRepository.merge(user, data);
+      const updatedUser = await userRepository.save(user);
+      res.json({
+         message: 'User updated successfully',
+         user: updatedUser
+      });
+   } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+   }
+});
 
-
+router.delete('/users/:id', async (req: Request, res: Response) => {
+   try {
+      const { id } = req.params;
+      if (!id) {
+         return res.status(400).json({ message: 'Invalid user id' });
+      }
+      const userRepository = AppDataSource.getRepository(User);
+      const user = await userRepository.findOneBy({ id: parseInt(id, 10) });
+      if (!user) {
+         return res.status(404).json({ message: 'User not found' });
+      }
+      await userRepository.delete({ id: parseInt(id, 10) });
+      res.json({ message: 'User deleted successfully' });
+   }catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+   }
+});
 export default router;
